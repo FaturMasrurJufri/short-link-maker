@@ -1,1031 +1,647 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Short Link Generator</title>
+    <title>NexusLink Pro // Ultra URL Shortener</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
         }
-
-        /* Animated Background Particles */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.3), transparent),
-                radial-gradient(2px 2px at 40% 70%, rgba(255,255,255,0.2), transparent),
-                radial-gradient(2px 2px at 60% 40%, rgba(255,255,255,0.3), transparent),
-                radial-gradient(2px 2px at 80% 10%, rgba(255,255,255,0.2), transparent),
-                radial-gradient(2px 2px at 10% 80%, rgba(255,255,255,0.15), transparent),
-                radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,0.1), transparent),
-                radial-gradient(2px 2px at 90% 90%, rgba(255,255,255,0.2), transparent),
-                radial-gradient(2px 2px at 50% 50%, rgba(255,255,255,0.15), transparent);
-            z-index: 0;
-            animation: twinkle 4s ease-in-out infinite alternate;
+        .mono-font {
+            font-family: 'JetBrains Mono', monospace;
         }
-
-        @keyframes twinkle {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 40px 35px;
-            box-shadow: 
-                0 25px 60px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            animation: slideUp 0.8s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .header-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .header h1 {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 3s ease-in-out infinite;
-            letter-spacing: -0.5px;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% center; }
-            50% { background-position: 100% center; }
-            100% { background-position: 0% center; }
-        }
-
-        /* Developer Identity */
-        .developer-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 8px;
-            margin-bottom: 30px;
-            padding: 8px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50px;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #00ff88;
-            animation: blink 1.5s ease-in-out infinite;
-            box-shadow: 0 0 8px rgba(0, 255, 136, 0.6), 0 0 20px rgba(0, 255, 136, 0.3);
-            flex-shrink: 0;
-        }
-
-        @keyframes blink {
+        @keyframes neon-pulse {
             0%, 100% {
-                opacity: 1;
-                box-shadow: 0 0 8px rgba(0, 255, 136, 0.6), 0 0 20px rgba(0, 255, 136, 0.3);
                 transform: scale(1);
+                opacity: 1;
+                box-shadow: 0 0 8px #10b981, 0 0 16px #10b981;
             }
             50% {
-                opacity: 0.3;
-                box-shadow: 0 0 3px rgba(0, 255, 136, 0.2), 0 0 8px rgba(0, 255, 136, 0.1);
-                transform: scale(0.85);
+                transform: scale(0.82);
+                opacity: 0.35;
+                box-shadow: 0 0 2px #10b981, 0 0 4px rgba(16, 185, 129, 0.2);
             }
         }
-
-        .developer-info span {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
-
-        .developer-info strong {
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 600;
-        }
-
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .form-group label .required {
-            color: #f093fb;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-wrapper .input-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 18px;
-            opacity: 0.5;
-            z-index: 2;
-            transition: opacity 0.3s;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px 14px 48px;
-            background: rgba(255, 255, 255, 0.07);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            color: #fff;
-            font-size: 15px;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .form-group input:focus {
-            border-color: #667eea;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
-        }
-
-        .form-group input:focus ~ .input-icon,
-        .form-group input:focus + .input-icon {
-            opacity: 1;
-        }
-
-        .input-wrapper:focus-within .input-icon {
-            opacity: 1;
-        }
-
-        /* Custom name preview */
-        .name-preview {
-            margin-top: 8px;
-            padding: 8px 14px;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 8px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
-            display: none;
-            word-break: break-all;
-        }
-
-        .name-preview.active {
-            display: block;
-        }
-
-        .name-preview span {
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        /* Button */
-        .btn-generate {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: #fff;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 28px;
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-generate::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn-generate:hover::before {
-            left: 100%;
-        }
-
-        .btn-generate:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-generate:active {
-            transform: translateY(0);
-        }
-
-        .btn-generate.loading {
-            pointer-events: none;
-            opacity: 0.8;
-        }
-
-        /* Spinner */
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            display: none;
-        }
-
-        .btn-generate.loading .spinner {
-            display: block;
-        }
-
-        .btn-generate.loading .btn-text {
-            display: none;
-        }
-
-        .btn-generate.loading .btn-icon {
-            display: none;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Result Area */
-        .result-area {
-            margin-top: 25px;
-            display: none;
-            animation: fadeInUp 0.5s ease;
-        }
-
-        .result-area.active {
-            display: block;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .result-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-            margin-bottom: 25px;
-        }
-
-        .result-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .result-box {
-            display: flex;
-            align-items: center;
-            background: rgba(0, 255, 136, 0.05);
-            border: 1px solid rgba(0, 255, 136, 0.15);
-            border-radius: 14px;
-            padding: 5px;
-            gap: 5px;
-        }
-
-        .result-link {
-            flex: 1;
-            padding: 12px 16px;
-            color: #00ff88;
-            font-size: 14px;
-            font-weight: 500;
-            word-break: break-all;
-            line-height: 1.5;
-        }
-
-        .btn-copy {
-            padding: 12px 20px;
-            background: rgba(0, 255, 136, 0.15);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            border-radius: 10px;
-            color: #00ff88;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .btn-copy:hover {
-            background: rgba(0, 255, 136, 0.25);
-            transform: scale(1.02);
-        }
-
-        .btn-copy.copied {
-            background: rgba(0, 255, 136, 0.3);
-            color: #fff;
-        }
-
-        /* Link Info */
-        .link-info {
-            margin-top: 15px;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .info-tag {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .info-tag .tag-icon {
-            font-size: 14px;
-        }
-
-        /* History Section */
-        .history-section {
-            margin-top: 25px;
-            display: none;
-        }
-
-        .history-section.active {
-            display: block;
-        }
-
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .history-title {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 500;
-        }
-
-        .btn-clear-history {
-            background: none;
-            border: 1px solid rgba(255, 100, 100, 0.2);
-            color: rgba(255, 100, 100, 0.6);
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-clear-history:hover {
-            background: rgba(255, 100, 100, 0.1);
-            color: rgba(255, 100, 100, 0.9);
-        }
-
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 240px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .history-list::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .history-list::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.02);
-            border-radius: 4px;
-        }
-
-        .history-list::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-        }
-
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            transition: all 0.3s;
-            gap: 10px;
-        }
-
-        .history-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .history-item-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .history-item-name {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
-            margin-bottom: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .history-item-link {
-            font-size: 11px;
-            color: #667eea;
-            word-break: break-all;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .history-item-copy {
-            background: rgba(102, 126, 234, 0.1);
-            border: none;
-            color: #667eea;
-            padding: 6px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-            flex-shrink: 0;
-        }
-
-        .history-item-copy:hover {
-            background: rgba(102, 126, 234, 0.2);
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-family: 'Poppins', sans-serif;
-            z-index: 1000;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .toast.success {
-            border-color: rgba(0, 255, 136, 0.3);
-        }
-
-        .toast.error {
-            border-color: rgba(255, 100, 100, 0.3);
-        }
-
-        /* Error state */
-        .form-group input.error {
-            border-color: rgba(255, 100, 100, 0.5);
-            animation: shake 0.5s ease;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .error-message {
-            color: rgba(255, 100, 100, 0.8);
-            font-size: 12px;
-            margin-top: 6px;
-            display: none;
-        }
-
-        .error-message.active {
-            display: block;
-        }
-
-        /* Stats bar */
-        .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 20px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .card {
-                padding: 30px 20px;
-            }
-
-            .header h1 {
-                font-size: 22px;
-            }
-
-            .result-box {
-                flex-direction: column;
-            }
-
-            .btn-copy {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .stats-bar {
-                gap: 20px;
-            }
+        .blinking-dot {
+            animation: neon-pulse 1.5s infinite ease-in-out;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white relative overflow-x-hidden">
 
-    <div class="container">
-        <div class="card">
-            <!-- Header -->
-            <div class="header">
-                <div class="header-icon">🔗</div>
-                <h1>Short Link Generator</h1>
-            </div>
+    <!-- Ambient Glow -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute -top-40 -left-40 w-[28rem] h-[28rem] bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/3 -right-40 w-[28rem] h-[28rem] bg-emerald-500/10 rounded-full blur-3xl"></div>
+    </div>
 
-            <!-- Developer Identity -->
-            <div class="developer-info">
-                <div class="status-dot"></div>
-                <span>developer: <strong>fatur62</strong></span>
-            </div>
-
-            <!-- Form -->
-            <div class="form-group">
-                <label>📝 Nama Link <span class="required">*</span></label>
-                <div class="input-wrapper">
-                    <span class="input-icon">🏷️</span>
-                    <input 
-                        type="text" 
-                        id="linkName" 
-                        placeholder="Contoh: promo-ramadhan, link-portofolio..."
-                        maxlength="50"
-                    >
-                </div>
-                <div class="name-preview" id="namePreview">
-                    Akan menjadi: <span id="previewText"></span>
-                </div>
-                <div class="error-message" id="nameError">⚠️ Silakan masukkan nama link terlebih dahulu</div>
-            </div>
-
-            <div class="form-group">
-                <label>🌐 URL Tujuan <span class="required">*</span></label>
-                <div class="input-wrapper">
-                    <span class="input-icon">🔗</span>
-                    <input 
-                        type="url" 
-                        id="longUrl" 
-                        placeholder="https://contoh.com/halaman-yang-panjang..."
-                    >
-                </div>
-                <div class="error-message" id="urlError">⚠️ Silakan masukkan URL yang valid</div>
-            </div>
-
-            <!-- Generate Button -->
-            <button class="btn-generate" id="btnGenerate" onclick="generateShortLink()">
-                <span class="btn-icon">⚡</span>
-                <span class="btn-text">Buat Short Link</span>
-                <div class="spinner"></div>
+    <!-- Modal QR Code -->
+    <div id="qr-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="max-w-sm w-full glass-card border border-slate-800 rounded-2xl p-6 text-center shadow-2xl relative">
+            <button type="button" id="close-qr-btn" class="absolute top-4 right-4 w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
             </button>
-
-            <!-- Result -->
-            <div class="result-area" id="resultArea">
-                <div class="result-divider"></div>
-                <div class="result-label">✅ Short link berhasil dibuat</div>
-                <div class="result-box">
-                    <div class="result-link" id="resultLink"></div>
-                    <button class="btn-copy" id="btnCopy" onclick="copyLink()">
-                        <span id="copyIcon">📋</span>
-                        <span id="copyText">Salin</span>
-                    </button>
-                </div>
-                <div class="link-info">
-                    <div class="info-tag">
-                        <span class="tag-icon">🏷️</span>
-                        <span id="infoName">-</span>
-                    </div>
-                    <div class="info-tag">
-                        <span class="tag-icon">📅</span>
-                        <span id="infoDate">-</span>
-                    </div>
-                </div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium mb-3">
+                <i class="fa-solid fa-qrcode"></i> QR Code Aktif
             </div>
-
-            <!-- History -->
-            <div class="history-section" id="historySection">
-                <div class="result-divider"></div>
-                <div class="history-header">
-                    <span class="history-title">📚 Riwayat Link</span>
-                    <button class="btn-clear-history" onclick="clearHistory()">🗑️ Hapus Semua</button>
-                </div>
-                <div class="history-list" id="historyList"></div>
+            <h3 id="qr-modal-title" class="text-sm font-bold text-emerald-400 mono-font truncate mb-4"></h3>
+            <div class="bg-white p-4 rounded-xl inline-block mx-auto mb-4">
+                <img id="qr-modal-img" src="" alt="QR Code" class="w-48 h-48 object-contain mx-auto">
             </div>
-
-            <!-- Stats -->
-            <div class="stats-bar">
-                <div class="stat-item">
-                    <div class="stat-number" id="totalLinks">0</div>
-                    <div class="stat-label">Links Dibuat</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="todayLinks">0</div>
-                    <div class="stat-label">Hari Ini</div>
-                </div>
-            </div>
+            <p class="text-xs text-slate-400 mb-4">Scan QR ini dengan HP apa saja untuk langsung membuka link tujuan.</p>
+            <button type="button" id="close-qr-bottom-btn" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold cursor-pointer">Tutup</button>
         </div>
     </div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast">
-        <span id="toastIcon">✅</span>
-        <span id="toastMessage">Berhasil!</span>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 py-8 w-full flex-grow flex flex-col justify-between">
+        <div>
+            <!-- HEADER & IDENTITAS DEVELOPER -->
+            <header class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-6 gap-4">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/25 border border-white/10">
+                        <i class="fa-solid fa-bolt-lightning text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+                            Nexus<span class="bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">Link</span> <span class="text-xs font-mono uppercase px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 align-middle">REAL ENGINE</span>
+                        </h1>
+                        <!-- Identitas developer : fatur62 dengan bulatan kecil kelap-kelip di kirinya -->
+                        <div class="flex items-center gap-2.5 mt-1.5 bg-slate-900/90 border border-emerald-500/30 px-3 py-1 rounded-full w-fit shadow-sm">
+                            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 blinking-dot"></span>
+                            <span class="text-xs font-semibold tracking-wider text-emerald-400 mono-font">developer : fatur62</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card border border-slate-800 px-4 py-2.5 rounded-xl flex items-center gap-3 self-start sm:self-auto">
+                    <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <div>
+                        <div class="text-[11px] text-slate-400 uppercase tracking-wider">Total Link Aktif</div>
+                        <div id="stat-total-links" class="text-base font-bold text-white mono-font">0</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- MAIN FORM -->
+            <main class="space-y-8">
+                <section class="glass-card border border-slate-800/90 rounded-2xl p-6 sm:p-8 shadow-2xl">
+                    <div class="mb-6 pb-4 border-b border-slate-800/80">
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-cyan-400"></i>
+                            Generator Short Link Global (100% Aktif di Semua Browser)
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">
+                            Menggunakan jaringan server global nyata agar link pendek bisa langsung diklik dan dibuka di Chrome/HP siapa saja tanpa error SSL atau nyasar ke web orang lain.
+                        </p>
+                    </div>
+
+                    <form id="shortener-form" class="space-y-5" novalidate>
+                        <!-- 1. Input Long URL -->
+                        <div>
+                            <label for="long-url" class="block text-sm font-semibold text-slate-200 mb-2 flex items-center justify-between">
+                                <span><i class="fa-solid fa-link text-cyan-400 mr-1.5"></i> Link Panjang Tujuan (Long URL) <span class="text-rose-400">*</span></span>
+                                <button type="button" id="fill-example-btn" class="text-xs text-cyan-400 hover:underline cursor-pointer">Isi Contoh Link</button>
+                            </label>
+                            <input 
+                                type="url" 
+                                id="long-url" 
+                                required 
+                                placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                class="w-full px-4 py-3.5 bg-slate-950/90 border border-slate-800 rounded-xl text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500 text-sm"
+                            >
+                        </div>
+
+                        <!-- 2. Pilihan Provider Domain Server + Nama Depan + Nama Link -->
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                            <!-- Server Gateway Asli -->
+                            <div class="md:col-span-3">
+                                <label for="server-domain" class="block text-sm font-semibold text-slate-200 mb-2">
+                                    <i class="fa-solid fa-server text-blue-400 mr-1"></i> Server Aktif
+                                </label>
+                                <select 
+                                    id="server-domain" 
+                                    class="w-full px-3 py-3.5 bg-slate-950/90 border border-slate-800 rounded-xl text-slate-200 focus:outline-none focus:border-cyan-500 text-sm mono-font cursor-pointer"
+                                >
+                                    <option value="is.gd">is.gd/</option>
+                                    <option value="v.gd">v.gd/</option>
+                                </select>
+                            </div>
+
+                            <!-- Kolom Pemberian Nama Depan Link (Custom Prefix) -->
+                            <div class="md:col-span-4">
+                                <label for="custom-prefix" class="block text-sm font-semibold text-slate-200 mb-2 flex items-center justify-between">
+                                    <span><i class="fa-solid fa-tag text-emerald-400 mr-1"></i> Nama Depan Link</span>
+                                    <span class="text-[10px] text-emerald-400 font-normal">Bebas Diubah</span>
+                                </label>
+                                <div class="relative flex items-center">
+                                    <input 
+                                        type="text" 
+                                        id="custom-prefix" 
+                                        value="fatur62"
+                                        placeholder="misal: fatur62 / toko"
+                                        class="w-full pl-3.5 pr-8 py-3.5 bg-slate-950/90 border border-slate-800 rounded-xl text-emerald-300 font-semibold placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm mono-font"
+                                    >
+                                    <span class="absolute right-3 text-slate-500 mono-font font-bold select-none">_</span>
+                                </div>
+                            </div>
+
+                            <!-- Kolom Nama Link Milik User (Custom Alias) -->
+                            <div class="md:col-span-5">
+                                <label for="custom-slug" class="block text-sm font-semibold text-slate-200 mb-2 flex items-center justify-between">
+                                    <span><i class="fa-solid fa-pen-nib text-cyan-400 mr-1"></i> Nama Link Anda</span>
+                                    <span class="text-[10px] text-slate-400 font-normal">Wajib Unik</span>
+                                </label>
+                                <div class="flex gap-2">
+                                    <input 
+                                        type="text" 
+                                        id="custom-slug" 
+                                        placeholder="misal: promo2026"
+                                        class="flex-1 px-3.5 py-3.5 bg-slate-950/90 border border-slate-800 rounded-xl text-cyan-300 font-semibold placeholder-slate-600 focus:outline-none focus:border-cyan-500 text-sm mono-font"
+                                    >
+                                    <button 
+                                        type="button" 
+                                        id="random-slug-btn"
+                                        class="px-3.5 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition-all cursor-pointer shrink-0"
+                                        title="Buat Kode Unik Acak"
+                                    >
+                                        <i class="fa-solid fa-dice text-cyan-400"></i> Acak
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Preview Real-time -->
+                        <div class="bg-slate-950/95 border border-slate-800 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 text-xs text-slate-400">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                <span>Preview Link Aktif:</span>
+                            </div>
+                            <div class="text-sm mono-font font-bold truncate">
+                                <span class="text-slate-500">https://</span><span id="preview-server" class="text-blue-400">is.gd</span><span class="text-slate-500">/</span><span id="preview-prefix" class="text-emerald-400">fatur62</span><span id="preview-sep" class="text-slate-500">_</span><span id="preview-slug" class="text-cyan-400">promo2026</span>
+                            </div>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            id="submit-btn"
+                            class="w-full py-4 px-6 bg-gradient-to-r from-cyan-500 via-blue-600 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-white font-bold rounded-xl shadow-lg shadow-cyan-500/20 transition-all cursor-pointer flex items-center justify-center gap-2 text-base"
+                        >
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>Buat Short Link Aktif Sekarang</span>
+                        </button>
+                    </form>
+
+                    <!-- Error Box -->
+                    <div id="error-alert" class="hidden mt-5 p-4 bg-rose-950/70 border border-rose-800 rounded-xl text-rose-200 text-xs sm:text-sm flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-400 text-base shrink-0"></i>
+                            <span id="error-message"></span>
+                        </div>
+                    </div>
+
+                    <!-- Result Card -->
+                    <div id="result-card" class="hidden mt-6 p-5 bg-slate-900/90 border border-emerald-500/40 rounded-2xl shadow-xl">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs text-emerald-400 uppercase font-bold tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check"></i> Short Link Resmi Aktif & Siap Dipaste di Chrome!
+                            </span>
+                            <span id="result-time" class="text-xs text-slate-400 mono-font"></span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                            <div class="flex-1 bg-slate-950 border border-slate-800 px-4 py-3.5 rounded-xl flex items-center justify-between gap-2 overflow-hidden">
+                                <a id="short-link-output" href="#" target="_blank" rel="noopener noreferrer" class="text-cyan-300 hover:text-cyan-200 underline font-bold mono-font text-base truncate"></a>
+                                <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">ONLINE</span>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <button type="button" id="copy-primary-btn" class="flex-1 sm:flex-none px-5 py-3.5 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded-xl text-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                    <i class="fa-solid fa-copy"></i>
+                                    <span id="copy-btn-text">Salin</span>
+                                </button>
+                                <button type="button" id="qr-primary-btn" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-cyan-400 rounded-xl text-sm border border-slate-700 cursor-pointer" title="Lihat QR Code">
+                                    <i class="fa-solid fa-qrcode"></i>
+                                </button>
+                                <a id="open-primary-btn" href="#" target="_blank" rel="noopener noreferrer" class="px-4 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    <span>Buka</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Riwayat Link -->
+                <section class="glass-card border border-slate-800/90 rounded-2xl p-6 sm:p-8 shadow-xl">
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+                        <div>
+                            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i>
+                                Riwayat Short Link Anda
+                            </h2>
+                            <p class="text-xs text-slate-400">Semua link di bawah ini aktif di internet dan bisa langsung diklik.</p>
+                        </div>
+                        <button type="button" id="clear-history-btn" class="px-3 py-1.5 bg-rose-950/50 hover:bg-rose-900/70 text-rose-300 border border-rose-800/50 rounded-lg text-xs font-medium cursor-pointer">
+                            <i class="fa-solid fa-trash-can mr-1"></i> Hapus Semua
+                        </button>
+                    </div>
+
+                    <div id="empty-history" class="text-center py-10 text-slate-500 text-xs">
+                        Belum ada riwayat short link yang dibuat.
+                    </div>
+
+                    <div id="history-list" class="space-y-3 hidden"></div>
+                </section>
+            </main>
+        </div>
+
+        <footer class="mt-12 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <div class="flex items-center gap-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 blinking-dot"></span>
+                <span>Engineered by <strong class="text-emerald-400 mono-font">developer : fatur62</strong></span>
+            </div>
+            <div>&copy; 2026 NexusLink Pro — Real Global Shortener.</div>
+        </footer>
     </div>
 
+    <!-- SCRIPT UTAMA (ES6+ & Safe JSON Handling) -->
     <script>
-        // Storage for history
-        let linkHistory = JSON.parse(localStorage.getItem('linkHistory') || '[]');
-        let totalCreated = parseInt(localStorage.getItem('totalCreated') || '0');
+        const STORAGE_KEY = 'nexuslink_real_fatur62_v4';
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            updateStats();
-            renderHistory();
-            
-            // Live preview for link name
-            document.getElementById('linkName').addEventListener('input', function() {
-                const preview = document.getElementById('namePreview');
-                const previewText = document.getElementById('previewText');
-                const value = this.value.trim();
-                
-                if (value) {
-                    const slug = slugify(value);
-                    previewText.textContent = `short.link/${slug}`;
-                    preview.classList.add('active');
-                } else {
-                    preview.classList.remove('active');
+        // Elemen DOM
+        const form = document.getElementById('shortener-form');
+        const longUrlInput = document.getElementById('long-url');
+        const serverSelect = document.getElementById('server-domain');
+        const prefixInput = document.getElementById('custom-prefix');
+        const slugInput = document.getElementById('custom-slug');
+        const previewServer = document.getElementById('preview-server');
+        const previewPrefix = document.getElementById('preview-prefix');
+        const previewSep = document.getElementById('preview-sep');
+        const previewSlug = document.getElementById('preview-slug');
+        const submitBtn = document.getElementById('submit-btn');
+        const errorAlert = document.getElementById('error-alert');
+        const errorMessage = document.getElementById('error-message');
+        const resultCard = document.getElementById('result-card');
+        const shortLinkOutput = document.getElementById('short-link-output');
+        const openPrimaryBtn = document.getElementById('open-primary-btn');
+
+        // Sanitasi teks hanya huruf, angka, dan underscore (syarat API is.gd/v.gd)
+        function cleanIdentifier(str) {
+            if (typeof str !== 'string') return '';
+            return str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+        }
+
+        function generateRandomCode(len = 4) {
+            const chars = 'abcdefghjkmnpqrstuvwxyz23456789';
+            let out = '';
+            for (let i = 0; i < len; i++) {
+                out += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return out;
+        }
+
+        // Update Live Preview secara akurat
+        function updateLivePreview() {
+            const srv = serverSelect.value;
+            const pfx = cleanIdentifier(prefixInput.value);
+            const slg = cleanIdentifier(slugInput.value) || 'link_anda';
+
+            previewServer.textContent = srv;
+            previewPrefix.textContent = pfx;
+            previewSep.textContent = pfx ? '_' : '';
+            previewSlug.textContent = slg;
+        }
+
+        // Panggil API is.gd / v.gd menggunakan JSONP agar bebas blokir CORS di browser & GitHub Pages
+        function createRealShortLinkJSONP(provider, targetUrl, customShortSlug) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                const script = document.createElement('script');
+
+                const timeoutId = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('Waktu koneksi ke server habis. Silakan coba lagi.'));
+                }, 10000);
+
+                function cleanup() {
+                    clearTimeout(timeoutId);
+                    delete window[callbackName];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
                 }
 
-                // Remove error state on input
-                this.classList.remove('error');
-                document.getElementById('nameError').classList.remove('active');
-            });
-
-            document.getElementById('longUrl').addEventListener('input', function() {
-                this.classList.remove('error');
-                document.getElementById('urlError').classList.remove('active');
-            });
-        });
-
-        function slugify(text) {
-            return text
-                .toLowerCase()
-                .replace(/[^a-z0-9\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-')
-                .trim();
-        }
-
-        function generateRandomString(length) {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-
-        function generateShortLink() {
-            const nameInput = document.getElementById('linkName');
-            const urlInput = document.getElementById('longUrl');
-            const name = nameInput.value.trim();
-            const url = urlInput.value.trim();
-            let hasError = false;
-
-            // Validate name
-            if (!name) {
-                nameInput.classList.add('error');
-                document.getElementById('nameError').classList.add('active');
-                hasError = true;
-            }
-
-            // Validate URL
-            if (!url) {
-                urlInput.classList.add('error');
-                document.getElementById('urlError').textContent = '⚠️ Silakan masukkan URL terlebih dahulu';
-                document.getElementById('urlError').classList.add('active');
-                hasError = true;
-            } else if (!isValidUrl(url)) {
-                urlInput.classList.add('error');
-                document.getElementById('urlError').textContent = '⚠️ Format URL tidak valid. Contoh: https://contoh.com';
-                document.getElementById('urlError').classList.add('active');
-                hasError = true;
-            }
-
-            if (hasError) return;
-
-            // Show loading
-            const btn = document.getElementById('btnGenerate');
-            btn.classList.add('loading');
-
-            // Simulate API call
-            setTimeout(() => {
-                const slug = slugify(name) || generateRandomString(6);
-                const shortLink = `short.link/${slug}-${generateRandomString(4)}`;
-
-                // Show result
-                document.getElementById('resultLink').textContent = shortLink;
-                document.getElementById('infoName').textContent = name;
-                document.getElementById('infoDate').textContent = getCurrentDate();
-                document.getElementById('resultArea').classList.add('active');
-
-                // Save to history
-                const historyItem = {
-                    name: name,
-                    shortLink: shortLink,
-                    originalUrl: url,
-                    date: new Date().toISOString(),
-                    displayDate: getCurrentDate()
+                window[callbackName] = (data) => {
+                    cleanup();
+                    if (data && data.shorturl) {
+                        resolve(data.shorturl);
+                    } else if (data && data.errormessage) {
+                        reject(new Error(data.errormessage));
+                    } else {
+                        reject(new Error('Gagal membuat short link.'));
+                    }
                 };
 
-                linkHistory.unshift(historyItem);
-                if (linkHistory.length > 20) linkHistory.pop(); // Keep max 20 items
-                localStorage.setItem('linkHistory', JSON.stringify(linkHistory));
+                script.onerror = () => {
+                    cleanup();
+                    reject(new Error('Gagal menghubungi server pemendek URL. Periksa koneksi internet Anda.'));
+                };
 
-                totalCreated++;
-                localStorage.setItem('totalCreated', totalCreated.toString());
-
-                // Update UI
-                updateStats();
-                renderHistory();
-
-                // Reset button
-                btn.classList.remove('loading');
-
-                // Show toast
-                showToast('✅', 'Short link berhasil dibuat!', 'success');
-
-                // Reset form
-                nameInput.value = '';
-                urlInput.value = '';
-                document.getElementById('namePreview').classList.remove('active');
-
-            }, 1500);
+                const encodedUrl = encodeURIComponent(targetUrl);
+                const encodedSlug = encodeURIComponent(customShortSlug);
+                script.src = `https://${provider}/create.php?format=json&callback=${callbackName}&url=${encodedUrl}&shorturl=${encodedSlug}`;
+                document.body.appendChild(script);
+            });
         }
 
-        function isValidUrl(string) {
+        // Validasi URL
+        function isValidHttpUrl(str) {
             try {
-                const url = new URL(string);
-                return url.protocol === 'http:' || url.protocol === 'https:';
+                const u = new URL(str);
+                return u.protocol === 'http:' || u.protocol === 'https:';
             } catch (_) {
                 return false;
             }
         }
 
-        function getCurrentDate() {
-            const now = new Date();
-            const options = { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-            return now.toLocaleDateString('id-ID', options);
-        }
-
-        function copyLink() {
-            const link = document.getElementById('resultLink').textContent;
-            copyToClipboard(link);
-
-            const btn = document.getElementById('btnCopy');
-            const icon = document.getElementById('copyIcon');
-            const text = document.getElementById('copyText');
-
-            btn.classList.add('copied');
-            icon.textContent = '✅';
-            text.textContent = 'Tersalin!';
-
-            showToast('📋', 'Link berhasil disalin ke clipboard!', 'success');
-
-            setTimeout(() => {
-                btn.classList.remove('copied');
-                icon.textContent = '📋';
-                text.textContent = 'Salin';
-            }, 2000);
-        }
-
-        function copyToClipboard(text) {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text);
-            } else {
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
+        // Penyimpanan JSON Aman dengan try-catch
+        function getStoredHistory() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (err) {
+                console.error('JSON Parse Error:', err);
+                return [];
             }
         }
 
-        function copyHistoryLink(link) {
-            copyToClipboard(link);
-            showToast('📋', 'Link berhasil disalin!', 'success');
+        function saveHistory(list) {
+            try {
+                if (!Array.isArray(list)) return;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            } catch (err) {
+                console.error('JSON Save Error:', err);
+            }
         }
 
-        function renderHistory() {
-            const historySection = document.getElementById('historySection');
-            const historyList = document.getElementById('historyList');
+        function showError(msg) {
+            errorMessage.textContent = msg;
+            errorAlert.classList.remove('hidden');
+        }
 
-            if (linkHistory.length === 0) {
-                historySection.classList.remove('active');
+        function hideError() {
+            errorAlert.classList.add('hidden');
+        }
+
+        // Handler Submit Form
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+
+            let longUrl = longUrlInput.value.trim();
+            if (!longUrl) {
+                showError('Masukkan link panjang terlebih dahulu.');
+                longUrlInput.focus();
                 return;
             }
 
-            historySection.classList.add('active');
-            historyList.innerHTML = linkHistory.map((item, index) => `
-                <div class="history-item" style="animation: fadeInUp 0.3s ease ${index * 0.05}s both;">
-                    <div class="history-item-info">
-                        <div class="history-item-name">${escapeHtml(item.name)}</div>
-                        <div class="history-item-link">${escapeHtml(item.shortLink)}</div>
+            if (!/^https?:\/\//i.test(longUrl)) {
+                longUrl = 'https://' + longUrl;
+            }
+
+            if (!isValidHttpUrl(longUrl)) {
+                showError('Format link panjang tidak valid.');
+                return;
+            }
+
+            const provider = serverSelect.value;
+            const prefix = cleanIdentifier(prefixInput.value);
+            let slug = cleanIdentifier(slugInput.value);
+
+            if (!slug) {
+                slug = generateRandomCode(5);
+                slugInput.value = slug;
+                updateLivePreview();
+            }
+
+            // Gabungkan Nama Depan + Nama Link
+            const combinedSlug = prefix ? `${prefix}_${slug}` : slug;
+
+            if (combinedSlug.length < 5) {
+                showError('Gabungan Nama Depan dan Nama Link minimal harus 5 karakter.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Mendaftarkan Link ke Server Global...</span>';
+
+            try {
+                const finalShortUrl = await createRealShortLinkJSONP(provider, longUrl, combinedSlug);
+
+                const newEntry = {
+                    id: Date.now(),
+                    longUrl: longUrl,
+                    shortUrl: finalShortUrl,
+                    date: new Date().toLocaleDateString('id-ID', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                };
+
+                const history = getStoredHistory();
+                history.unshift(newEntry);
+                saveHistory(history);
+
+                // Tampilkan Hasil
+                shortLinkOutput.textContent = finalShortUrl;
+                shortLinkOutput.href = finalShortUrl;
+                openPrimaryBtn.href = finalShortUrl;
+                document.getElementById('result-time').textContent = newEntry.date;
+                resultCard.classList.remove('hidden');
+
+                // Siapkan slug baru agar tidak bentrok jika klik lagi
+                slugInput.value = '';
+                updateLivePreview();
+                renderHistory();
+            } catch (err) {
+                // Terjemahkan pesan jika nama link sudah dipakai orang lain
+                let msg = err.message || 'Gagal membuat link.';
+                if (msg.toLowerCase().includes('already exists') || msg.toLowerCase().includes('taken')) {
+                    msg = `Nama link "${combinedSlug}" sudah pernah dipakai di server ${provider}! Silakan ketik Nama Link yang lain atau klik tombol Acak.`;
+                }
+                showError(msg);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>Buat Short Link Aktif Sekarang</span>';
+            }
+        });
+
+        // Render Daftar Riwayat
+        function renderHistory() {
+            const history = getStoredHistory();
+            document.getElementById('stat-total-links').textContent = String(history.length);
+
+            const emptyEl = document.getElementById('empty-history');
+            const listEl = document.getElementById('history-list');
+
+            if (history.length === 0) {
+                emptyEl.classList.remove('hidden');
+                listEl.classList.add('hidden');
+                listEl.innerHTML = '';
+                return;
+            }
+
+            emptyEl.classList.add('hidden');
+            listEl.classList.remove('hidden');
+
+            listEl.innerHTML = history.map(item => `
+                <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="overflow-hidden">
+                        <div class="flex items-center gap-2.5 flex-wrap">
+                            <a href="${escapeHtml(item.shortUrl)}" target="_blank" rel="noopener noreferrer" class="text-sm sm:text-base font-bold mono-font text-emerald-400 hover:underline flex items-center gap-1.5">
+                                ${escapeHtml(item.shortUrl)}
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+                            <span class="text-[11px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">${escapeHtml(item.date)}</span>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate mono-font mt-1">${escapeHtml(item.longUrl)}</p>
                     </div>
-                    <button class="history-item-copy" onclick="copyHistoryLink('${escapeHtml(item.shortLink)}')" title="Salin link">📋</button>
+                    <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                        <button type="button" data-copy="${escapeHtml(item.shortUrl)}" class="copy-item-btn px-3 py-1.5 bg-slate-900 hover:bg-cyan-500/20 text-cyan-300 border border-slate-800 rounded-lg text-xs font-medium cursor-pointer">
+                            <i class="fa-solid fa-copy mr-1"></i> Salin
+                        </button>
+                        <button type="button" data-qr="${escapeHtml(item.shortUrl)}" class="qr-item-btn px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-lg text-xs cursor-pointer">
+                            <i class="fa-solid fa-qrcode text-emerald-400"></i>
+                        </button>
+                        <button type="button" data-del="${Number(item.id)}" class="del-item-btn px-2.5 py-1.5 bg-slate-900 hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-slate-800 rounded-lg text-xs cursor-pointer">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
                 </div>
             `).join('');
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        function escapeHtml(str) {
+            if (typeof str !== 'string') return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
 
-        function clearHistory() {
-            if (confirm('Hapus semua riwayat link?')) {
-                linkHistory = [];
-                localStorage.setItem('linkHistory', '[]');
-                renderHistory();
-                showToast('🗑️', 'Riwayat berhasil dihapus', 'success');
+        function copyToClipboard(text, btnElement) {
+            navigator.clipboard.writeText(text).then(() => {
+                if (btnElement) {
+                    const original = btnElement.innerHTML;
+                    btnElement.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Tersalin';
+                    setTimeout(() => { btnElement.innerHTML = original; }, 1800);
+                }
+            }).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            });
+        }
+
+        function openQrModal(url) {
+            const modal = document.getElementById('qr-modal');
+            document.getElementById('qr-modal-title').textContent = url;
+            document.getElementById('qr-modal-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&data=${encodeURIComponent(url)}`;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeQrModal() {
+            const modal = document.getElementById('qr-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Event Listeners Rapi
+        document.addEventListener('DOMContentLoaded', () => {
+            slugInput.value = 'promo' + generateRandomCode(3);
+            updateLivePreview();
+            renderHistory();
+        });
+
+        serverSelect.addEventListener('change', updateLivePreview);
+        prefixInput.addEventListener('input', updateLivePreview);
+        slugInput.addEventListener('input', updateLivePreview);
+
+        document.getElementById('random-slug-btn').addEventListener('click', () => {
+            slugInput.value = 'link' + generateRandomCode(4);
+            updateLivePreview();
+        });
+
+        document.getElementById('fill-example-btn').addEventListener('click', () => {
+            longUrlInput.value = 'https://github.com/explore';
+            slugInput.value = 'git' + generateRandomCode(3);
+            updateLivePreview();
+        });
+
+        document.getElementById('copy-primary-btn').addEventListener('click', (e) => {
+            copyToClipboard(shortLinkOutput.textContent, e.currentTarget);
+        });
+
+        document.getElementById('qr-primary-btn').addEventListener('click', () => {
+            openQrModal(shortLinkOutput.textContent);
+        });
+
+        document.getElementById('close-qr-btn').addEventListener('click', closeQrModal);
+        document.getElementById('close-qr-bottom-btn').addEventListener('click', closeQrModal);
+
+        document.getElementById('clear-history-btn').addEventListener('click', () => {
+            localStorage.removeItem(STORAGE_KEY);
+            renderHistory();
+            resultCard.classList.add('hidden');
+        });
+
+        document.getElementById('history-list').addEventListener('click', (e) => {
+            const copyBtn = e.target.closest('.copy-item-btn');
+            if (copyBtn) {
+                copyToClipboard(copyBtn.getAttribute('data-copy'), copyBtn);
+                return;
             }
-        }
-
-        function updateStats() {
-            document.getElementById('totalLinks').textContent = totalCreated;
-
-            // Count today's links
-            const today = new Date().toDateString();
-            const todayCount = linkHistory.filter(item => 
-                new Date(item.date).toDateString() === today
-            ).length;
-            document.getElementById('todayLinks').textContent = todayCount;
-        }
-
-        function showToast(icon, message, type = 'success') {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastIcon').textContent = icon;
-            document.getElementById('toastMessage').textContent = message;
-            
-            toast.className = `toast ${type}`;
-            
-            setTimeout(() => toast.classList.add('show'), 10);
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
+            const qrBtn = e.target.closest('.qr-item-btn');
+            if (qrBtn) {
+                openQrModal(qrBtn.getAttribute('data-qr'));
+                return;
+            }
+            const delBtn = e.target.closest('.del-item-btn');
+            if (delBtn) {
+                const id = Number(delBtn.getAttribute('data-del'));
+                const filtered = getStoredHistory().filter(item => item.id !== id);
+                saveHistory(filtered);
+                renderHistory();
+            }
+        });
     </script>
 </body>
 </html>
